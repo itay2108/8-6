@@ -1,0 +1,6 @@
+${PODS_ROOT}/Target Support Files/Pods-Eight-Six/Pods-Eight-Six-frameworks.sh
+${BUILT_PRODUCTS_DIR}/Motion/Motion.framework
+${BUILT_PRODUCTS_DIR}/Realm/Realm.framework
+${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework
+${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework
+${BUILT_PRODUCTS_DIR}/SwiftFontName/SwiftFontName.framework
