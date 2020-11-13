@@ -21,7 +21,7 @@ class ImageRetriever {
     
     func getImages(count: Int, featured: Bool, completion: @escaping (_ result: [UnsplashImage]) -> Void) {
         
-        var finalURL = "\(baseURL)?client_id=\(publicKey)&count=\(count)"
+        var finalURL = "\(baseURL)?client_id=\(publicKey)&count=\(count)&orientation=squarish"
         
         if featured { finalURL += "&featured=\(featured)" }
         
@@ -34,9 +34,9 @@ class ImageRetriever {
             
             if let receivedData = data {
                 if let blueprint = self.parseJSON(from: receivedData) {
-                    //self.delegate?.didReceive(images: self.buildImageObjects(from: blueprint))
                     DispatchQueue.main.async {
                         completion(self.buildImageObjects(from: blueprint))
+                        session.invalidateAndCancel()
                     }
                 }
             }
@@ -50,7 +50,7 @@ class ImageRetriever {
         var images: [UnsplashImage] = []
         
         for image in data {
-            let uImg = UnsplashImage(url: image.links.download, title: image.user.name, likes: image.likes)
+            let uImg = UnsplashImage(url: image.links.download, title: image.user.name, likes: image.likes, full: image.urls.full, regular: image.urls.regular, small: image.urls.small, thumb: image.urls.thumb)
             images.append(uImg)
 
         }

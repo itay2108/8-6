@@ -6,9 +6,10 @@ target 'Eight-Six' do
   use_frameworks!
 
   # Pods for Eight-Six
+  
 	pod 'Motion'
 	pod 'SnapKit'
   pod 'SwiftFontName'
-  pod 'RealmSwift'
+
 
 end

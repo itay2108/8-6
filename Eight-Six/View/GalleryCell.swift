@@ -43,7 +43,7 @@ class GalleryCell: UICollectionViewCell {
         return label
     }()
     
-    private lazy var heart: UIImageView = {
+    lazy var heart: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFit
         view.image = UIImage(systemName: "heart.fill")
@@ -107,7 +107,7 @@ class GalleryCell: UICollectionViewCell {
         
         title.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(8 * heightModifier)
+            make.centerY.equalToSuperview()
             make.left.equalToSuperview().offset(16 * widthModifier)
             make.height.equalToSuperview().multipliedBy(0.75)
         }
@@ -115,14 +115,14 @@ class GalleryCell: UICollectionViewCell {
         let likeOffset: CGFloat = likes.text?.count == nil ? 12 : (CGFloat(likes.text!.count) * 5.3)
         
         heart.snp.makeConstraints { (make) in
-            make.centerY.equalToSuperview().offset(-8 * heightModifier)
+            make.centerY.equalToSuperview().offset(-12 * heightModifier)
             make.centerX.equalToSuperview().offset(likeOffset * heightModifier)
             make.height.equalTo(16 * heightModifier)
             make.width.equalTo(16 * heightModifier)
         }
         
         likes.snp.makeConstraints { (make) in
-            make.centerY.equalToSuperview().offset(-8 * heightModifier)
+            make.centerY.equalToSuperview().offset(-12 * heightModifier)
             make.centerX.equalToSuperview().offset(-likeOffset * heightModifier)
             make.height.equalTo(heart.snp.height)
         }
@@ -136,7 +136,7 @@ class GalleryCell: UICollectionViewCell {
     }
     
     func setContent(with image: UnsplashImage) {
-        self.imageContainer.image = image.image
+        self.imageContainer.image = image.thumb
         self.title.text = image.title.capitalized
         self.likes.text = String(image.likes)
     }

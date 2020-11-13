@@ -30,16 +30,16 @@ public class FontTypes {
     init() {
         sizeModifier = UIScreen.main.bounds.size.height / 812
         
-        h1 = UIFont(name: FontName.AvenirNextDemiBold, size: 23 * sizeModifier)!
-        h2 = UIFont(name: FontName.AvenirNextRegular, size: 16 * sizeModifier)!
-        h2_medium = UIFont(name: FontName.AvenirNextMedium, size: 16 * sizeModifier)!
-        h3 = UIFont(name: FontName.AvenirNextRegular, size: 14 * sizeModifier)!
-        h3_medium = UIFont(name: FontName.AvenirNextMedium, size: 14 * sizeModifier)!
-        h3_demiBold = UIFont(name: FontName.AvenirNextDemiBold, size: 14 * sizeModifier)!
-        h4_medium = UIFont(name: FontName.AvenirNextMedium, size: 13 * sizeModifier)!
-        h5 = UIFont(name: FontName.AvenirNextRegular, size: 11 * sizeModifier)!
+        h1 = UIFont(name: FontName.AvenirNextDemiBold, size: 28 * sizeModifier)!
+        h2 = UIFont(name: FontName.AvenirNextRegular, size: 20 * sizeModifier)!
+        h2_medium = UIFont(name: FontName.AvenirNextMedium, size: 20 * sizeModifier)!
+        h3 = UIFont(name: FontName.AvenirNextRegular, size: 16 * sizeModifier)!
+        h3_medium = UIFont(name: FontName.AvenirNextMedium, size: 16 * sizeModifier)!
+        h3_demiBold = UIFont(name: FontName.AvenirNextDemiBold, size: 16 * sizeModifier)!
+        h4_medium = UIFont(name: FontName.AvenirNextMedium, size: 14 * sizeModifier)!
+        h5 = UIFont(name: FontName.AvenirNextRegular, size: 12 * sizeModifier)!
         xl = UIFont(name: FontName.AvenirNextDemiBold, size: 64 * sizeModifier)!
-        button_bold = UIFont(name: FontName.AvenirNextDemiBold, size: 20 * sizeModifier)!
+        button_bold = UIFont(name: FontName.AvenirNextDemiBold, size: 18 * sizeModifier)!
     }
     
 

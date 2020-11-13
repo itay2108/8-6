@@ -20,9 +20,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
+        UIApplication.shared.windows.first?.backgroundColor = UIColor.white
     
     
-        window?.rootViewController = MainNavigationController(rootViewController: MainViewController())
+        window?.rootViewController = MainTabBarController()
     
     
         window?.rootViewController?.view.backgroundColor = .white

@@ -11,14 +11,24 @@ class UnsplashImage {
     
     var notificationCenter = NotificationCenter.default
 
-    
     var url: URL?
     var title: String
     var likes: Int
     
+    var fullSize: URL?
+    var regularSize: URL?
+    var smallSize: URL?
+    var thumbSize: URL?
+    
     var image: UIImage? {
         didSet {
             if image != nil { notificationCenter.post(name: .imageHasFinishedLoading, object: nil)}
+        }
+    }
+    
+    var thumb: UIImage? {
+        didSet {
+            if thumb != nil { notificationCenter.post(name: .thumbHasFinishedLoading, object: nil)}
         }
     }
     
@@ -31,7 +41,6 @@ class UnsplashImage {
             DispatchQueue.main.async {
                 completion(UIImage(data: data!))
                 session.invalidateAndCancel()
-
             }
         }
         
@@ -39,13 +48,18 @@ class UnsplashImage {
     
     }
     
-    init(url: String, title: String, likes: Int) {
+    init(url: String, title: String, likes: Int, full: String, regular: String, small: String, thumb: String) {
         self.url = URL(string: url)
         self.title = title
         self.likes = likes
         
-        getImagefrom(URL(string: url)) { (image) in
-            self.image = image
+        self.fullSize = URL(string: full)
+        self.regularSize = URL(string: regular)
+        self.smallSize = URL(string: small)
+        self.thumbSize = URL(string: thumb)
+        
+        getImagefrom(URL(string: thumb)) { (image) in
+            self.thumb = image
         }
     }
     

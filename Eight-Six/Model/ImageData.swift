@@ -9,6 +9,13 @@ import Foundation
 
 struct ImageData: Codable {
     
+    struct Urls: Codable {
+        let full: String
+        let regular: String
+        let small: String
+        let thumb: String
+    }
+    
     struct Links: Codable {
         let download: String
     }
@@ -20,5 +27,6 @@ struct ImageData: Codable {
     let likes: Int
     let links: Links
     let user: User
+    let urls: Urls
     
 }

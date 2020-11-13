@@ -23,7 +23,15 @@ class MainViewController: UIViewController {
          cv.register(GalleryCell.self, forCellWithReuseIdentifier: "cell")
         
         cv.backgroundColor = .clear
+        cv.showsVerticalScrollIndicator = false
         return cv
+    }()
+    
+    private lazy var refreshControl: UIRefreshControl = {
+        let refresh = UIRefreshControl()
+        refresh.tintColor = .darkGray
+        refresh.addTarget(self, action: #selector(refreshHandler), for: .valueChanged)
+        return refresh
     }()
 
     private var galleryDataSource: [UnsplashImage]?
@@ -35,21 +43,27 @@ class MainViewController: UIViewController {
         gallery.delegate = self; gallery.dataSource = self
         
         //post notification to be notified when images load
-        notificationCenter.addObserver(self, selector: #selector(imageHasLoaded), name: .imageHasFinishedLoading, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(imageHasLoaded), name: .thumbHasFinishedLoading, object: nil)
+        
+        
+        //setup visual elements
+        self.setUpUI()
         
         // retrieve images
-        ImageRetriever.shared.getImages(count: 4, featured: true) { (images) in
+        ImageRetriever.shared.getImages(count: 10, featured: true) { (images) in
             self.galleryDataSource = images
-            
-            //setup visual elements
-            self.setUpUI()
+
         }
 
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tabBarController?.tabBar.isHidden = false
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         for cell in gallery.visibleCells {
             if let galleryCell = cell as? GalleryCell {
                 galleryCell.imageContainer.motionIdentifier = nil
@@ -60,8 +74,9 @@ class MainViewController: UIViewController {
     //MARK: - UI Methods
     
     private func setUpUI() {
-        
-        self.title = "Daily Photos"
+
+        self.navigationController?.navigationBar.topItem?.title = "Daily Photos"
+
         addSubviews()
         setConstraintsForSubviews()
         setUpMotion()
@@ -69,18 +84,21 @@ class MainViewController: UIViewController {
     
     private func setUpMotion() {
         self.isMotionEnabled = true
+        self.view.motionIdentifier = "bg"
     }
     
     private func addSubviews() {
         self.view.addSubview(gallery)
+        gallery.refreshControl = refreshControl
     }
     
     private func setConstraintsForSubviews() {
+        print(safeAreaTop)
         gallery.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().offset(safeAreaTop + 36)
+            make.top.equalToSuperview().offset(24 * heightModifier)
             make.left.equalToSuperview().offset(24 * widthModifier)
             make.right.equalToSuperview().offset(-24 * widthModifier)
-            make.height.equalToSuperview().multipliedBy(0.95).offset(-(safeAreaTop + safeAreaBottom))
+            make.bottom.equalToSuperview().offset(-safeAreaBottom)
         }
         
     }
@@ -90,7 +108,25 @@ class MainViewController: UIViewController {
         
     }
     
-    //Mark: - Deinit
+    //MARK: - Targets
+    
+    @objc private func refreshHandler() {
+        ImageRetriever.shared.getImages(count: 10, featured: true) { (images) in
+            self.galleryDataSource = images
+            
+            DispatchQueue.main.async {
+                self.gallery.reloadData()
+                self.gallery.refreshControl?.endRefreshing()
+            }
+        }
+    }
+    
+    @objc private func rightBarButtonItemPressed(_ sender: UIButton) {
+        print("tap")
+    }
+    
+    
+    //MARK: - Deinit
     
     deinit {
         notificationCenter.removeObserver(self)
@@ -118,8 +154,8 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! GalleryCell
         
         let errorCell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! GalleryCell
-        errorCell.backgroundColor = .darkGray
-        errorCell.title.text = "Error"
+        errorCell.title.text = ""
+        errorCell.heart.isHidden = true
         
         guard galleryDataSource != nil else { return errorCell }
         
@@ -131,7 +167,9 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let destination = ImagePreviewViewController()
+        destination.galleryDataSource = self.galleryDataSource
         destination.image = galleryDataSource?[indexPath.row]
+        destination.index = indexPath.row
         
         if let selectedCell = collectionView.cellForItem(at: indexPath) as? GalleryCell {
             selectedCell.imageContainer.motionIdentifier = "image"
@@ -140,5 +178,12 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         self.navigationController?.pushViewController(destination, animated: true)
     }
 
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        UIView.animate(withDuration: 0.15) {
+            self.gallery.snp.updateConstraints { (make) in
+                make.top.equalToSuperview().offset((self.safeAreaTop + 24) * self.heightModifier)
+            }
+        }
+    }
 
 }
