@@ -209,7 +209,7 @@ class ImagePreviewViewController: UIViewController {
         
         guard
             galleryDataSource != nil,
-            let nextImage = galleryDataSource?[index % 4]
+            let nextImage = galleryDataSource?[index % galleryDataSource!.count]
         else { return }
         
         self.image = nextImage
