@@ -48,6 +48,15 @@ public extension UIView {
         self.layer.maskedCorners = corners
      }
     
+    func addLoadingIndicator() {
+        let loadingIndicator = UIActivityIndicatorView()
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.color = .darkGray
+        loadingIndicator.style = .medium
+        
+        self.addSubview(loadingIndicator)
+    }
+    
 }
 
 extension Date {

@@ -24,8 +24,9 @@
 		664927E6255E059900641AFB /* MainNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664927E5255E059900641AFB /* MainNavigationController.swift */; };
 		66492809255EE12500641AFB /* VisualButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66492808255EE12500641AFB /* VisualButton.swift */; };
 		66492811255F069E00641AFB /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66492810255F069E00641AFB /* MainTabBarController.swift */; };
-		66492817255F07E200641AFB /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66492816255F07E200641AFB /* SecondViewController.swift */; };
+		66492817255F07E200641AFB /* ThirdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66492816255F07E200641AFB /* ThirdViewController.swift */; };
 		6649281A255F1DC900641AFB /* CRTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66492819255F1DC900641AFB /* CRTextField.swift */; };
+		66EA595B25640EFF003997F0 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EA595A25640EFF003997F0 /* SecondViewController.swift */; };
 		F0A17ECD6855F81E41A57EAC /* Pods_Eight_Six.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43B38F903417B008CBBFA213 /* Pods_Eight_Six.framework */; };
 /* End PBXBuildFile section */
 
@@ -50,8 +51,9 @@
 		664927E5255E059900641AFB /* MainNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationController.swift; sourceTree = "<group>"; };
 		66492808255EE12500641AFB /* VisualButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualButton.swift; sourceTree = "<group>"; };
 		66492810255F069E00641AFB /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
-		66492816255F07E200641AFB /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		66492816255F07E200641AFB /* ThirdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = "<group>"; };
 		66492819255F1DC900641AFB /* CRTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRTextField.swift; sourceTree = "<group>"; };
+		66EA595A25640EFF003997F0 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		B0931A8CF41901DE3EE75E91 /* Pods-Eight-Six.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Eight-Six.debug.xcconfig"; path = "Target Support Files/Pods-Eight-Six/Pods-Eight-Six.debug.xcconfig"; sourceTree = "<group>"; };
 		D48B18494EAEA221E95321C6 /* Pods-Eight-Six.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Eight-Six.release.xcconfig"; path = "Target Support Files/Pods-Eight-Six/Pods-Eight-Six.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -148,7 +150,8 @@
 				66492814255F06A500641AFB /* Navigation */,
 				66492798255CAD4A00641AFB /* MainViewController.swift */,
 				664927DD255E04C000641AFB /* ImagePreviewViewController.swift */,
-				66492816255F07E200641AFB /* SecondViewController.swift */,
+				66EA595A25640EFF003997F0 /* SecondViewController.swift */,
+				66492816255F07E200641AFB /* ThirdViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -283,7 +286,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66492817255F07E200641AFB /* SecondViewController.swift in Sources */,
+				66EA595B25640EFF003997F0 /* SecondViewController.swift in Sources */,
+				66492817255F07E200641AFB /* ThirdViewController.swift in Sources */,
 				664927B4255DA7D300641AFB /* FontTypes.swift in Sources */,
 				66492799255CAD4A00641AFB /* MainViewController.swift in Sources */,
 				66492811255F069E00641AFB /* MainTabBarController.swift in Sources */,

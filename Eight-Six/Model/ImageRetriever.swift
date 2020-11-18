@@ -19,51 +19,61 @@ class ImageRetriever {
     let publicKey: String = "eZeO6V5TxBL0xm5YfDUfmZ5TRzEfuBX1HxGWQ1J4nbs"
     let secretKey: String = "bBJBfzPJrK6zyErSyXyeJJURfCZYDrIzF-TxYg6kwFA"
     
-    func getImages(count: Int, featured: Bool, completion: @escaping (_ result: [UnsplashImage]) -> Void) {
+    func getImages(count: Int, featured: Bool, didReceiveImage: @escaping (_ result: UnsplashImage, _ count: Int) -> Void, completion: ((_ success: Bool) -> Void)? = nil) {
         
-        var finalURL = "\(baseURL)?client_id=\(publicKey)&count=\(count)&orientation=squarish"
+        var finalURL = "\(baseURL)?client_id=\(publicKey)&orientation=squarish"
         
         if featured { finalURL += "&featured=\(featured)" }
-        
-        let session = URLSession(configuration: .default)
+         
+        let dispatchGroup = DispatchGroup()
         
         guard let url = URL(string: finalURL) else { return }
-
-        let task = session.dataTask(with: url) { (data, response, error) in
-            if error != nil { print("Error creating url task: \(String(describing: error))") }
+        
+        print(url)
+        
+        imageLoop: for _ in 1...count {
             
-            if let receivedData = data {
-                if let blueprint = self.parseJSON(from: receivedData) {
-                    DispatchQueue.main.async {
-                        completion(self.buildImageObjects(from: blueprint))
-                        session.invalidateAndCancel()
+                dispatchGroup.enter()
+                
+                let session = URLSession(configuration: .default)
+
+                let task = session.dataTask(with: url) { (data, response, error) in
+                    if error != nil { print("Error creating url task: \(String(describing: error))") }
+                    
+                    if let receivedData = data {
+                        if let blueprint = self.parseJSON(from: receivedData) {
+                            DispatchQueue.main.async {
+                                didReceiveImage(self.buildImageObject(from: blueprint), count)
+                                session.invalidateAndCancel()
+                                dispatchGroup.leave()
+
+                            }
+                        }
                     }
+
                 }
-            }
-        }
-        
-        task.resume()
-        
-    }
-
-    func buildImageObjects(from data: [ImageData]) -> [UnsplashImage] {
-        var images: [UnsplashImage] = []
-        
-        for image in data {
-            let uImg = UnsplashImage(url: image.links.download, title: image.user.name, likes: image.likes, full: image.urls.full, regular: image.urls.regular, small: image.urls.small, thumb: image.urls.thumb)
-            images.append(uImg)
+                
+                task.resume()
 
         }
         
-        return images
+        dispatchGroup.notify(queue: .main) {
+
+            if completion != nil { completion!(true) }
+        }
+    }
+
+    func buildImageObject(from data: ImageData) -> UnsplashImage {
+         return UnsplashImage(url: data.links.download, title: data.user.name, likes: data.likes, full: data.urls.full, regular: data.urls.regular, small: data.urls.small, thumb: data.urls.thumb)
+
     }
 
 
-    func parseJSON(from data: Data) -> [ImageData]? {
+    func parseJSON(from data: Data) -> ImageData? {
         let decoder = JSONDecoder()
         
         do {
-            let decodedData = try decoder.decode([ImageData].self, from: data)
+            let decodedData = try decoder.decode(ImageData.self, from: data)
             return decodedData
         } catch {
             print("cannot parse data \(error)")

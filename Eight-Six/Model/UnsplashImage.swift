@@ -58,9 +58,9 @@ class UnsplashImage {
         self.smallSize = URL(string: small)
         self.thumbSize = URL(string: thumb)
         
-        getImagefrom(URL(string: thumb)) { (image) in
-            self.thumb = image
-        }
+//        getImagefrom(URL(string: thumb)) { (image) in
+//            self.thumb = image
+//        }
     }
     
 }

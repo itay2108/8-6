@@ -20,9 +20,13 @@ class MainTabBarController: UITabBarController {
         
         let secondVC = SecondViewController()
         
-        secondVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "square.fill.and.line.vertical.and.square"), tag: 1)
+        secondVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "arrow.2.circlepath.circle.fill"), tag: 1)
         
-        self.viewControllers = [mainNC, secondVC]
+        let thirdVC = ThirdViewController()
+        
+        thirdVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "square.fill.and.line.vertical.and.square"), tag: 1)
+        
+        self.viewControllers = [mainNC, secondVC, thirdVC]
         
         self.tabBar.tintColor = UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1)
         

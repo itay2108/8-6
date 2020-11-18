@@ -195,7 +195,7 @@ class ImagePreviewViewController: UIViewController {
             loadingIndicator.startAnimating()
         }
         
-        imageContainer.image = image?.image
+        imageContainer.image = image!.image
         
         imageTitle.text = image!.title
     }
@@ -221,10 +221,12 @@ class ImagePreviewViewController: UIViewController {
     }
     
     @objc private func showPreviousImage() {
-        index -= 1
+        
+        guard galleryDataSource != nil else { return }
+        
+        index = index == 0 ? galleryDataSource!.count - 1 : index - 1
         
         guard
-            galleryDataSource != nil,
             let previousImage = galleryDataSource?[index % galleryDataSource!.count]
         else { return }
         

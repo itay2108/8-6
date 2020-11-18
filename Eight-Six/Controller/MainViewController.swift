@@ -13,6 +13,8 @@ class MainViewController: UIViewController {
     
     let notificationCenter = NotificationCenter.default
     
+    var cellCount: Int = 4
+    
     private lazy var gallery: UICollectionView = {
         
         let layout = UICollectionViewFlowLayout()
@@ -34,7 +36,7 @@ class MainViewController: UIViewController {
         return refresh
     }()
 
-    private var galleryDataSource: [UnsplashImage]?
+    private var galleryDataSource: [UnsplashImage] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,10 +52,14 @@ class MainViewController: UIViewController {
         self.setUpUI()
         
         // retrieve images
-        ImageRetriever.shared.getImages(count: 10, featured: true) { (images) in
-            self.galleryDataSource = images
-
+        ImageRetriever.shared.getImages(count: 10, featured: false) { (image, count) in
+            self.cellCount = count
+            self.galleryDataSource.append(image)
+            self.gallery.reloadData()
+        } completion: { (success) in
+            if success { print("successfully retrieved all images") }
         }
+
 
     }
     
@@ -111,14 +117,15 @@ class MainViewController: UIViewController {
     //MARK: - Targets
     
     @objc private func refreshHandler() {
-        ImageRetriever.shared.getImages(count: 10, featured: true) { (images) in
-            self.galleryDataSource = images
-            
-            DispatchQueue.main.async {
-                self.gallery.reloadData()
-                self.gallery.refreshControl?.endRefreshing()
-            }
+        galleryDataSource = []
+        
+        ImageRetriever.shared.getImages(count: cellCount, featured: true) { (image, count) in
+            print(count)
+            self.galleryDataSource.append(image)
+            self.gallery.reloadData()
+            self.gallery.refreshControl?.endRefreshing()
         }
+
     }
     
     @objc private func rightBarButtonItemPressed(_ sender: UIButton) {
@@ -138,8 +145,7 @@ class MainViewController: UIViewController {
 
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        return galleryDataSource?.count ?? 4
+        return cellCount
     }
     
     
@@ -157,18 +163,23 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         errorCell.title.text = ""
         errorCell.heart.isHidden = true
         
-        guard galleryDataSource != nil else { return errorCell }
+        guard galleryDataSource.count != 0,
+              galleryDataSource.count > indexPath.row
+              else { return errorCell }
         
-        cell.setContent(with: galleryDataSource![indexPath.row])
+        cell.setContent(with: galleryDataSource[indexPath.row])
         if cell.imageContainer.image != nil { cell.loadingIndicator.stopAnimating() }
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        guard galleryDataSource.count > indexPath.row, galleryDataSource.count != 0 else { return }
+        
         let destination = ImagePreviewViewController()
         destination.galleryDataSource = self.galleryDataSource
-        destination.image = galleryDataSource?[indexPath.row]
+        destination.image = galleryDataSource[indexPath.row]
         destination.index = indexPath.row
         
         if let selectedCell = collectionView.cellForItem(at: indexPath) as? GalleryCell {
@@ -185,5 +196,26 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             }
         }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        guard galleryDataSource.count > indexPath.row, galleryDataSource.count != 0 else { return }
+
+        let imageToLoad = galleryDataSource[indexPath.row]
+
+        
+        if let galleryCell = cell as? GalleryCell {
+            guard imageToLoad.thumb == nil else { return }
+            
+            imageToLoad.getImagefrom(imageToLoad.thumbSize) { (image) in
+                imageToLoad.thumb = image
+            }
+            
+            galleryCell.setContent(with: imageToLoad)
+        }
+        
+    }
+    
+
 
 }
