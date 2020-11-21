@@ -139,6 +139,7 @@ class GalleryCell: UICollectionViewCell {
         self.imageContainer.image = image.thumb
         self.title.text = image.title.capitalized
         self.likes.text = String(image.likes)
+        self.heart.isHidden = false
     }
     
     override init(frame: CGRect) {

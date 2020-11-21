@@ -4,22 +4,26 @@
 //
 //  Created by itay gervash on 12/11/2020.
 //
-
 import UIKit
 
 //protocol ImageRetrieverDelegate {
 //    func didReceive(images: [UnsplashImage])
 //}
-
 class ImageRetriever {
     
     static let shared = ImageRetriever()
+    
+    private var networkError: RetrieverError? = nil
     
     let baseURL: String = "https://api.unsplash.com/photos/random/"
     let publicKey: String = "eZeO6V5TxBL0xm5YfDUfmZ5TRzEfuBX1HxGWQ1J4nbs"
     let secretKey: String = "bBJBfzPJrK6zyErSyXyeJJURfCZYDrIzF-TxYg6kwFA"
     
     func getImages(count: Int, featured: Bool, didReceiveImage: @escaping (_ result: UnsplashImage, _ count: Int) -> Void, completion: ((_ success: Bool, _ error: RetrieverError?) -> Void)? = nil) {
+        
+        
+        
+        self.networkError = nil
         
         var finalURL = "\(baseURL)?client_id=\(publicKey)&orientation=squarish"
         
@@ -34,41 +38,35 @@ class ImageRetriever {
         
         DispatchQueue.main.async {
             
-            for _ in 1...count {
+            for _ in 1...count.magnitude {
                 
-                var networkError: RetrieverError? = nil
-                
-                //Uncomment next line to see that loop breaks if there's an error
-                //if i == 2 { networkError = .test }
-                
-                if networkError == nil {
+                if self.networkError == nil {
                     //enter dispatch group if error is nil
                     dispatchGroup.enter()
                     
                     //create session and task to get data and create the image objects with it
                     let session = URLSession(configuration: .default)
                     
-                    let task = session.dataTask(with: url) { (data, response, error) in
-                        if error != nil { networkError = .url }
+                    let _ = session.dataTask(with: url) { (data, response, error) in
+                        if error != nil { self.networkError = .url }
                         
                         if let receivedData = data {
                             if let blueprint = self.parseJSON(from: receivedData) {
                                 DispatchQueue.main.async {
                                     didReceiveImage(self.buildImageObject(from: blueprint), count)
-                                    session.invalidateAndCancel()
+                                    session.finishTasksAndInvalidate()
                                 }
-                            } else { networkError = .json; print(networkError!.rawValue) }
-                        } else { networkError = .data; print(networkError!.rawValue) }
-                    }
-                    
-                    task.resume()
-                    //leave dispatch group when finished executing the task and signal the semaphore to continue to the next loop iteration
-                    dispatchGroup.leave()
-                    sema.signal()
+                            } else { self.networkError = .json; print(self.networkError!.rawValue) }
+                        } else { self.networkError = .data; print(self.networkError!.rawValue) }
+                        
+                        //leave dispatch group when finished executing the task and signal the semaphore to continue to the next loop iteration
+                        dispatchGroup.leave()
+                        sema.signal()
+                    }.resume()
                     
                     //if there is an error fire the completion with success = false and return
                 } else {
-                    if completion != nil { completion!(false, networkError)
+                    if completion != nil { completion!(false, self.networkError)
                         return
                     }
                 }

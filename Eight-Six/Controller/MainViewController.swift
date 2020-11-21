@@ -13,7 +13,9 @@ class MainViewController: UIViewController {
     
     let notificationCenter = NotificationCenter.default
     
-    var cellCount: Int = 4
+    private var cellCount: Int = 4
+    private var cellHeight: CGFloat?
+    private var defaultContentAdjusmentOffsetY: CGFloat = 0
     
     private lazy var gallery: UICollectionView = {
         
@@ -40,7 +42,6 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("view did load")
         
         //delegate setting
         gallery.delegate = self; gallery.dataSource = self
@@ -53,13 +54,13 @@ class MainViewController: UIViewController {
         self.setUpUI()
         
         // retrieve images
-        ImageRetriever.shared.getImages(count: 4, featured: false) { (image, count) in
+        ImageRetriever.shared.getImages(count: 10, featured: false) { (image, count) in
             self.cellCount = count
             self.galleryDataSource.append(image)
             self.gallery.reloadData()
         } completion: { (success, error) in
             if success { print("successfully retrieved all images") }
-            else { print(error?.rawValue as Any) }
+            else { print("error retrieving images") }
         }
 
 
@@ -72,11 +73,17 @@ class MainViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         for cell in gallery.visibleCells {
             if let galleryCell = cell as? GalleryCell {
                 galleryCell.imageContainer.motionIdentifier = nil
             }
         }
+        
+        
+        defaultContentAdjusmentOffsetY = gallery.contentOffset.y
+        print(defaultContentAdjusmentOffsetY.magnitude)
+        setConstraintsForSubviews()
     }
     
     //MARK: - UI Methods
@@ -86,8 +93,8 @@ class MainViewController: UIViewController {
         self.navigationController?.navigationBar.topItem?.title = "Daily Photos"
 
         addSubviews()
-        setConstraintsForSubviews()
         setUpMotion()
+        
     }
     
     private func setUpMotion() {
@@ -101,12 +108,14 @@ class MainViewController: UIViewController {
     }
     
     private func setConstraintsForSubviews() {
-        print(safeAreaTop)
+
         gallery.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().offset(24 * heightModifier)
+
+            make.top.equalToSuperview().offset((36 + defaultContentAdjusmentOffsetY.magnitude) * heightModifier)
             make.left.equalToSuperview().offset(24 * widthModifier)
             make.right.equalToSuperview().offset(-24 * widthModifier)
-            make.bottom.equalToSuperview().offset(-safeAreaBottom)
+            make.bottom.equalToSuperview()
+            
         }
         
     }
@@ -122,7 +131,7 @@ class MainViewController: UIViewController {
         galleryDataSource = []
         
         ImageRetriever.shared.getImages(count: cellCount, featured: true) { (image, count) in
-            print(count)
+
             self.galleryDataSource.append(image)
             self.gallery.reloadData()
             self.gallery.refreshControl?.endRefreshing()
@@ -152,8 +161,13 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        print("cv height", collectionView.frame.height)
+        
+        if cellHeight == nil { cellHeight = (collectionView.frame.height - 72) / 2 }
+        
         let width = (collectionView.frame.width - 32) / 2
-        let height = (collectionView.frame.height - 48) / 2
+        let height = cellHeight!
+        
         let size = CGSize(width: width, height: height)
         return size
     }
@@ -192,12 +206,24 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        UIView.animate(withDuration: 0.15) {
-            self.gallery.snp.updateConstraints { (make) in
-                make.top.equalToSuperview().offset((self.safeAreaTop + 24) * self.heightModifier)
+        print("\(scrollView.contentOffset.y), \(defaultContentAdjusmentOffsetY)")
+        
+        if scrollView.contentOffset.y != 0 && scrollView.contentOffset.y > defaultContentAdjusmentOffsetY {
+            UIView.animate(withDuration: 0.15) {
+                self.gallery.snp.updateConstraints { (make) in
+                    make.top.equalToSuperview()
+                }
+            }
+        } else if scrollView.contentOffset.y == defaultContentAdjusmentOffsetY {
+            UIView.animate(withDuration: 0.15) {
+                self.gallery.snp.updateConstraints { (make) in
+                    make.top.equalToSuperview().offset((36 + self.defaultContentAdjusmentOffsetY.magnitude) * self.heightModifier)
+                }
             }
         }
+        
     }
+    
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
