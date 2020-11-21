@@ -27,6 +27,7 @@
 		66492817255F07E200641AFB /* ThirdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66492816255F07E200641AFB /* ThirdViewController.swift */; };
 		6649281A255F1DC900641AFB /* CRTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66492819255F1DC900641AFB /* CRTextField.swift */; };
 		66EA595B25640EFF003997F0 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EA595A25640EFF003997F0 /* SecondViewController.swift */; };
+		66F374E7256818BA00C909D0 /* RetrieverError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F374E6256818BA00C909D0 /* RetrieverError.swift */; };
 		F0A17ECD6855F81E41A57EAC /* Pods_Eight_Six.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43B38F903417B008CBBFA213 /* Pods_Eight_Six.framework */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +55,7 @@
 		66492816255F07E200641AFB /* ThirdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = "<group>"; };
 		66492819255F1DC900641AFB /* CRTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRTextField.swift; sourceTree = "<group>"; };
 		66EA595A25640EFF003997F0 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		66F374E6256818BA00C909D0 /* RetrieverError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrieverError.swift; sourceTree = "<group>"; };
 		B0931A8CF41901DE3EE75E91 /* Pods-Eight-Six.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Eight-Six.debug.xcconfig"; path = "Target Support Files/Pods-Eight-Six/Pods-Eight-Six.debug.xcconfig"; sourceTree = "<group>"; };
 		D48B18494EAEA221E95321C6 /* Pods-Eight-Six.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Eight-Six.release.xcconfig"; path = "Target Support Files/Pods-Eight-Six/Pods-Eight-Six.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -130,6 +132,7 @@
 				664927C6255DC1C600641AFB /* ImageData.swift */,
 				664927CE255DC38900641AFB /* ImageRetriever.swift */,
 				664927D1255DC3E400641AFB /* UnsplashImage.swift */,
+				66F374E6256818BA00C909D0 /* RetrieverError.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -303,6 +306,7 @@
 				664927D2255DC3E400641AFB /* UnsplashImage.swift in Sources */,
 				664927B5255DA7D300641AFB /* CRButton.swift in Sources */,
 				664927DB255DFD7600641AFB /* NotificationName+Extensions.swift in Sources */,
+				66F374E7256818BA00C909D0 /* RetrieverError.swift in Sources */,
 				66492797255CAD4A00641AFB /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

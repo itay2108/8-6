@@ -40,6 +40,7 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("view did load")
         
         //delegate setting
         gallery.delegate = self; gallery.dataSource = self
@@ -52,12 +53,13 @@ class MainViewController: UIViewController {
         self.setUpUI()
         
         // retrieve images
-        ImageRetriever.shared.getImages(count: 10, featured: false) { (image, count) in
+        ImageRetriever.shared.getImages(count: 4, featured: false) { (image, count) in
             self.cellCount = count
             self.galleryDataSource.append(image)
             self.gallery.reloadData()
-        } completion: { (success) in
+        } completion: { (success, error) in
             if success { print("successfully retrieved all images") }
+            else { print(error?.rawValue as Any) }
         }
 
 
@@ -203,9 +205,9 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
 
         let imageToLoad = galleryDataSource[indexPath.row]
 
+        guard imageToLoad.thumb == nil else { return }
         
         if let galleryCell = cell as? GalleryCell {
-            guard imageToLoad.thumb == nil else { return }
             
             imageToLoad.getImagefrom(imageToLoad.thumbSize) { (image) in
                 imageToLoad.thumb = image
